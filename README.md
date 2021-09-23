@@ -20,11 +20,6 @@ DB_USERNAME=root
 DB_PASSWORD=aaa123
 ```
 
-```docker-compose exec app php artisan key:generate```
-<br/>
-
-```docker-compose exec app php artisan config:cache```
-
 ## How to run the application:
 ```1- docker-compose up -d```
 <br/>
