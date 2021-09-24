@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers\Role;
 
+use App\Contracts\Repositories\ContactInformationRepositoryInterface;
+use App\Contracts\Repositories\RoleRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleRequest;
-use App\Http\Resources\RoleResource;
-use App\Models\Role;
 
 class RoleController extends Controller
 {
+    private $role;
+
+    public function __construct(RoleRepositoryInterface $role) {
+        $this->role = $role;
+    }
+
     /*
      * Show all roles in storage.
      *
@@ -16,12 +22,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
-        return response()->json([
-            'success' => true,
-            'rolesCount' => $roles->count(),
-            'roles' => $roles,
-        ]);
+        return $this->role->index();
     }
 
     /*
@@ -32,8 +33,7 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
-        $role = Role::create($request->all());
-        return new RoleResource($role);
+        return $this->role->store($request);
     }
 
     /*
@@ -45,13 +45,7 @@ class RoleController extends Controller
      */
     public function update(int $id, RoleRequest $request)
     {
-        $integrity = check_integrity(Role::class, $id);
-        if ($integrity) {
-            return  $integrity;
-        }
-        $role = Role::find($id);
-        $role->description = $request->input('description');
-        return new RoleResource($role);
+       return $this->role->update($id, $request);
     }
 
     /*
@@ -62,15 +56,6 @@ class RoleController extends Controller
      */
     public function delete($id)
     {
-        $integrity = check_integrity(Role::class, $id);
-        if ($integrity) {
-            return  $integrity;
-        }
-        $role = Role::find($id);
-        $role->delete();
-        return response()->json([
-            'success' => true,
-            'message' => 'Role successfully deleted.'
-        ], 200);
+        return $this->role->delete($id);
     }
 }

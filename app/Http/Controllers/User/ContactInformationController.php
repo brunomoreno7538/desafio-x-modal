@@ -4,12 +4,16 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ContactInformationRequest;
-use App\Http\Resources\ContactInformationResource;
-use App\Models\ContactInformation;
-use Illuminate\Support\Facades\Auth;
+use App\Repositories\ContactInformationRepository;
 
 class ContactInformationController extends Controller
 {
+
+    private $contactInformation;
+
+    public function __construct(ContactInformationRepository $contactInformation) {
+        $this->contactInformation = $contactInformation;
+    }
 
     /*
      * Show all contact information in storage.
@@ -18,11 +22,7 @@ class ContactInformationController extends Controller
      */
     public function index()
     {
-        $contactInformation = Auth::user()->contactInformation;
-        return response()->json([
-            'success' => true,
-            'contactInformationDetails' => $contactInformation,
-        ]);
+        return $this->contactInformation->index();
     }
 
     /*
@@ -34,16 +34,6 @@ class ContactInformationController extends Controller
      */
     public function update(int $id, ContactInformationRequest $request)
     {
-        $user = Auth::user();
-        $integrity = check_integrity(ContactInformation::class, $id, $user);
-        if ($integrity) {
-            return $integrity;
-        }
-        $contactInformation = ContactInformation::find($id);
-        $contactInformation->cellphone_number = $request->input('cellphoneNumber');
-        $contactInformation->phone_number = $request->input('phoneNumber');
-        $contactInformation->extra_email = $request->input('extraEmail');
-        $contactInformation->save();
-        return new ContactInformationResource($contactInformation);
+        return $this->contactInformation->update($id, $request);
     }
 }
