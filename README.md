@@ -34,11 +34,14 @@ DB_PASSWORD=aaa123
 ```3- docker-compose exec app php artisan migrate```
 <br/>
 
-```4- docker-compose exec app php artisan db:seed --class=StatesSeeder```
+```4-  docker-compose exec app php artisan key:generate```
 <br/>
 
-```5- docker-compose exec app php artisan passport:install --force```
+```5- docker-compose exec app php artisan db:seed --class=StatesSeeder```
 <br/>
 
-```6- docker-compose exec app php ./vendor/bin/phpunit```
+```6- docker-compose exec app php artisan passport:install --force```
+<br/>
+
+```7- docker-compose exec app php ./vendor/bin/phpunit```
 <br/>
